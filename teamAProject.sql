@@ -162,7 +162,7 @@ VALUES(2,1, true, false, true, false, true, true, false);
 INSERT INTO the_schedule (emp_id, store_id, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)
 VALUES(3,1, true, true, false, false, true, false, true);
 INSERT INTO the_schedule (emp_id, store_id, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)
-VALUES(4,1,true, true, true, true, true, false, false);
+VALUES(4,1,true, true, true, true, false, false, false);
 INSERT INTO the_schedule (emp_id, store_id, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday )
 VALUES(5,1,false, false, true, true, false, true, false);
 
@@ -281,7 +281,7 @@ join link_customer_order on Customer_account.cus_id = link_customer_order.cus_id
 join customer_order on link_customer_order.cus_order_id = customer_order.cus_order_id
 order by Customer_account.cus_id;
 
---  queries
+################################  queries #############################
 # manager at store_id 1 wants to know which employees work during the week
 select emp_name, monday, thursday, wednesday, thursday, friday, saturday, sunday
 from the_schedule 
@@ -307,9 +307,23 @@ group by month(customer_order.date_of_order), customer_order.store_id
 order by month(customer_order.date_of_order) ASC, revenue DESC;
 
 
-#CEO want to know how know how many customer orders each store has
-#manager wants to know how many employees work each day
+#CEO want to know how know how many customer order at each store has
+select customer_order.store_id, count(customer_order.store_id)
+from customer_order;
+
+#manager wants to know how many employees work each day at store 1
+select SUM(monday) as monday, SUM(tuesday) as tuesday, SUM(wednesday) as wednesday, SUM(thursday) as tursday,
+SUM(friday) as friday, SUM(saturday) as saturday, SUM(sunday) as sunday
+from the_schedule
+where store_id = 1
+group by store_id;
+
 #manager wants to know how much they need to pay each employee for the week
+select employee.emp_id, employee.emp_name, 
+(monday + tuesday + wednesday + thursday + friday + saturday + sunday) as days_worked,
+(monday + tuesday + wednesday + thursday + friday + saturday + sunday) * employee.emp_salary as weekly_pay
+from employee
+join the_schedule on employee.emp_id = the_schedule.emp_id;
 
 
 #----------------------------------------------------------------
