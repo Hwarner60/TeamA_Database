@@ -1,5 +1,5 @@
 ###########################Triggers#####################################################
-#This trigger checks to make sure that there are negative prices being entered for the products
+#This trigger checks to make sure that there are no negative prices being entered for the products
 delimiter //
 Create Trigger PriceCheck
 before insert on product for each row
