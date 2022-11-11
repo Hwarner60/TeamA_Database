@@ -164,56 +164,42 @@ order by Customer_account.cus_id;
 
 #when data is added to the receipt table, the customer_order table will be updated so that customer_order.price_of_items equals
 #the total price of all items in the receipt table
-create trigger tr_Set_Cus_Order_Price
+
+create trigger tr_Update_Cus_Order_Price
 after insert on receipt
 for each row
 update customer_order
 set price_of_items = order_price(NEW.receipt_id) where customer_order.receipt_id = NEW.receipt_id;
 
 
-################################  queries #############################
-# manager at store_id 1 wants to know which employees work during the week
-select emp_name, monday, thursday, wednesday, thursday, friday, saturday, sunday
-from the_schedule 
-join employee on employee.emp_id = the_schedule.emp_id
-where store_id = 1
-order by employee.emp_name ASC;
 
-#manager from store_id 1 wants to know the stock at store_id 1
-select product.product_id, product.prod_name, stock.quantity
-from product
-join stock on product.product_id = stock.product_id
-where stock.store_id = 1;
+#when you insert into receipt, this trigger reduces the stock of an item by the quantity stated in the reciept
+#if the reciept quantity is greater than the stock quantity, the insert into reciept will not go though
+delimiter //
 
+create trigger tr_sufficient_stock
+before insert on receipt
+for each row
+	BEGIN
+		
+        declare stock_quantity  int;
+        set stock_quantity = cast((select quantity from stock where stock.product_id = new.product_id) as DECIMAL(10,2));
+        
+		if(new.quantity > stock_quantity) then
+			set new.quantity = -1;
+		END IF;
+	END //
 
-#CEO 1 wants to know how much revenue each store made each month of 2021
-select monthname(customer_order.date_of_order) as month, customer_order.store_id, 
-SUM(customer_order.price_of_items + stFunct(customer_order.price_of_items) + shipping(customer_order.price_of_items)) as revenue
-from customer_order
-join receipt on customer_order.receipt_id = receipt.receipt_id
-join product on product.product_id = receipt.product_id
-where customer_order.date_of_order between "2021-01-01" and "2021-12-31"
-group by month(customer_order.date_of_order), customer_order.store_id
-order by month(customer_order.date_of_order) ASC, revenue DESC;
+delimiter ;
 
 
-#CEO want to know how know how many customer order at each store has
-select customer_order.store_id, count(customer_order.store_id)
-from customer_order;
 
-#manager wants to know how many employees work each day at store 1
-select SUM(monday) as monday, SUM(tuesday) as tuesday, SUM(wednesday) as wednesday, SUM(thursday) as tursday,
-SUM(friday) as friday, SUM(saturday) as saturday, SUM(sunday) as sunday
-from the_schedule
-where store_id = 1
-group by store_id;
-
-#manager wants to know how much they need to pay each employee for the week
-select employee.emp_id, employee.emp_name, 
-(monday + tuesday + wednesday + thursday + friday + saturday + sunday) as days_worked,
-(monday + tuesday + wednesday + thursday + friday + saturday + sunday) * employee.emp_salary as weekly_pay
-from employee
-join the_schedule on employee.emp_id = the_schedule.emp_id;
+#trigger reduces the amount of  an item in stock by the quantity specified in the receipt entry
+create trigger tr_update_stock
+after insert on receipt
+for each row
+update stock
+set stock.quantity = stock.quantity - new.quantity where new.product_id = stock.product_id;
 
 
 ####################Procedure#################################
@@ -277,15 +263,15 @@ INSERT INTO product(product_id,price,prod_name)
 VALUES(5, 5.00, 'Grape');
 
 INSERT INTO stock(store_id,product_id, quantity)
-VALUES(1,1,55);
+VALUES(1,1,1000);
 INSERT INTO stock(store_id,product_id, quantity)
-VALUES(1,2,60);
+VALUES(1,2,1000);
 INSERT INTO stock(store_id,product_id, quantity)
-VALUES(1,3,70);
+VALUES(1,3,1000);
 INSERT INTO stock(store_id,product_id, quantity)
-VALUES(1,4,100);
+VALUES(1,4,1000);
 INSERT INTO stock(store_id,product_id, quantity)
-VALUES(1,5,50);
+VALUES(1,5,1000);
 
 insert into employee(emp_id, emp_name, emp_email,emp_phone,emp_position,emp_salary,emp_hiring_date,emp_termination_date) 
 values (1,'Josh Brown','joshbrown@gmail.com','612-652-4356','Deliver', 18.00, '2021-02-01', null);
@@ -381,6 +367,49 @@ VALUES(5,5);
 
 
 
+################################  queries #############################
+# manager at store_id 1 wants to know which employees work during the week
+select emp_name, monday, thursday, wednesday, thursday, friday, saturday, sunday
+from the_schedule 
+join employee on employee.emp_id = the_schedule.emp_id
+where store_id = 1
+order by employee.emp_name ASC;
+
+#manager from store_id 1 wants to know the stock at store_id 1
+select product.product_id, product.prod_name, stock.quantity
+from product
+join stock on product.product_id = stock.product_id
+where stock.store_id = 1;
+
+
+#CEO 1 wants to know how much revenue each store made each month of 2021
+select monthname(customer_order.date_of_order) as month, customer_order.store_id, 
+SUM(customer_order.price_of_items + stFunct(customer_order.price_of_items) + shipping(customer_order.price_of_items)) as revenue
+from customer_order
+join receipt on customer_order.receipt_id = receipt.receipt_id
+join product on product.product_id = receipt.product_id
+where customer_order.date_of_order between "2021-01-01" and "2021-12-31"
+group by month(customer_order.date_of_order), customer_order.store_id
+order by month(customer_order.date_of_order) ASC, revenue DESC;
+
+
+#CEO want to know how know how many customer order at each store has
+select customer_order.store_id, count(customer_order.store_id)
+from customer_order;
+
+#manager wants to know how many employees work each day at store 1
+select SUM(monday) as monday, SUM(tuesday) as tuesday, SUM(wednesday) as wednesday, SUM(thursday) as tursday,
+SUM(friday) as friday, SUM(saturday) as saturday, SUM(sunday) as sunday
+from the_schedule
+where store_id = 1
+group by store_id;
+
+#manager wants to know how much they need to pay each employee for the week
+select employee.emp_id, employee.emp_name, 
+(monday + tuesday + wednesday + thursday + friday + saturday + sunday) as days_worked,
+(monday + tuesday + wednesday + thursday + friday + saturday + sunday) * employee.emp_salary as weekly_pay
+from employee
+join the_schedule on employee.emp_id = the_schedule.emp_id;
 
 
 
