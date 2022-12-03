@@ -4,6 +4,12 @@
  */
 package gui;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.DefaultListModel;
+
 /**
  *
  * @author hwarn
@@ -15,6 +21,7 @@ public class EmployeeGUI extends javax.swing.JFrame {
      */
     public EmployeeGUI() {
         initComponents();
+        refresh();
     }
 
     /**
@@ -26,57 +33,407 @@ public class EmployeeGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        list_Employee = new javax.swing.JList<>();
+        jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        textField_TerminationDate = new javax.swing.JTextField();
+        textField_HireDate = new javax.swing.JTextField();
+        textField_Salary = new javax.swing.JTextField();
+        textField_Position = new javax.swing.JTextField();
+        textField_Phone = new javax.swing.JTextField();
+        textField_Email = new javax.swing.JTextField();
+        textField_Name = new javax.swing.JTextField();
+        textField_EmployeeID = new javax.swing.JTextField();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        list_Employee.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                employeeListSelected(evt);
+            }
+        });
+        jScrollPane1.setViewportView(list_Employee);
+
+        jLabel1.setText("Employee Table");
+
+        jButton1.setText("New");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newButtonPressed(evt);
+            }
+        });
+
+        jButton2.setText("Update");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonPressed(evt);
+            }
+        });
+
+        jButton3.setText("Delete");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonPressed(evt);
+            }
+        });
+
+        jLabel2.setText("Employee id:");
+
+        jLabel3.setText("Name:");
+
+        jLabel4.setText("Email:");
+
+        jLabel5.setText("Phone:");
+
+        jLabel6.setText("Position:");
+
+        jLabel7.setText("Salary:");
+
+        jLabel8.setText("Hire Date:");
+
+        jLabel9.setText("Termination Date:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel8)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textField_Name, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textField_EmployeeID, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textField_Phone, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textField_Position, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textField_Salary, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textField_HireDate, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textField_TerminationDate, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textField_Email, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 43, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(159, 159, 159)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton3)))
+                .addGap(43, 43, 43))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(textField_EmployeeID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(textField_Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(textField_Email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(8, 8, 8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(textField_Phone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(textField_Position, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(textField_Salary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jLabel8)
+                    .addComponent(textField_HireDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jLabel9)
+                    .addComponent(textField_TerminationDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EmployeeGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EmployeeGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EmployeeGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EmployeeGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void employeeListSelected(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_employeeListSelected
+        
+        int index = list_Employee.getSelectedIndex();
+        if(index < 0){return;}
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EmployeeGUI().setVisible(true);
+
+        //get the cpk (store_id, product_id)
+
+        String s = (String) list_Employee.getSelectedValue();
+        
+        String[] parts = s.split(" ");
+        
+        String emp_id = parts[2];
+          
+        
+
+        System.out.println(emp_id);
+
+        //Call the update form funciton to update the screen
+        updateform(emp_id);
+    }//GEN-LAST:event_employeeListSelected
+
+    public void updateform(String emp_id){
+
+        try {
+
+        //Establish mysql connection
+
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/teamaproject", "root","");
+
+        //Initialize the query
+
+        String query = 
+                "select * from employee where emp_id = " + emp_id;
+
+        //create the statement
+
+        Statement sta = connection.createStatement();
+
+        //Set the results
+
+        ResultSet rs = sta.executeQuery(query);
+
+        //Because we are targeting a primary key, we simply set the values to the results taht are retrieved.
+
+        rs.next();
+        //Set the controls to the dtabase values
+        //textField_User.setText(rs.getString("ID"));
+
+        textField_EmployeeID.setText(rs.getString("emp_id"));
+        textField_Name.setText(rs.getString("emp_name"));
+        textField_Email.setText(rs.getString("emp_email"));
+        textField_Phone.setText(rs.getString("emp_phone"));
+        textField_Position.setText(rs.getString("emp_position"));
+        textField_Salary.setText(rs.getString("emp_salary"));
+        textField_HireDate.setText(rs.getString("emp_hiring_date"));
+        textField_TerminationDate.setText(rs.getString("emp_termination_date"));
+        //close the connection
+
+        connection.close();
+
+        } catch (Exception exception) { //catch any exceptions that may have occured
+
+            exception.printStackTrace(); //print any errors
+
+        }
+
+    }
+
+    
+    private void deleteButtonPressed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonPressed
+       
+        try {
+
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/teamaproject", "root","");
+
+        Statement staDelete = connection.createStatement();
+
+
+        String queryDelete = 
+                "DELETE FROM employee WHERE emp_id = " + textField_EmployeeID.getText();
+
+                        
+        staDelete.executeUpdate(queryDelete);
+       
+        connection.close();
+
+        } catch (Exception exception) { //catch any exceptions that may have occured
+
+            exception.printStackTrace(); //print any errors
+
+        }
+        refresh();
+    }//GEN-LAST:event_deleteButtonPressed
+
+    private void updateButtonPressed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonPressed
+        try {
+
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/teamaproject", "root","");
+
+        Statement staUpdate = connection.createStatement();
+
+
+        String queryUpdate = 
+                "UPDATE employee SET " 
+                + "emp_name = '" + textField_Name.getText() + "',"
+                + "emp_email = '" + textField_Email.getText() + "',"
+                + "emp_phone = '" + textField_Phone.getText() + "',"
+                + "emp_position = '" + textField_Position.getText() + "',"
+                + "emp_salary = " + textField_Salary.getText() + ","
+                + "emp_hiring_date = '" + textField_HireDate.getText() + "',"
+                + "emp_termination_date = '" + textField_TerminationDate.getText() + "'" 
+                + " WHERE emp_id = " + textField_EmployeeID.getText();
+
+                        
+        staUpdate.executeUpdate(queryUpdate);
+       
+        connection.close();
+
+        } catch (Exception exception) { //catch any exceptions that may have occured
+
+            exception.printStackTrace(); //print any errors
+
+        }
+    }//GEN-LAST:event_updateButtonPressed
+
+    private void newButtonPressed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonPressed
+        
+          try{
+
+           Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/teamaproject", "root","");
+           Statement insert = connection.createStatement();
+           
+           String queryInsert = "INSERT INTO employee " + "VALUES('"
+                   + textField_EmployeeID.getText() + "','"
+                   + textField_Name.getText() + "','"
+                   + textField_Email.getText() + "','"
+                   + textField_Phone.getText() + "','" 
+                   + textField_Position.getText() + "','"
+                   + textField_Salary.getText() + "','"
+                   + textField_HireDate.getText() + "','"
+                   + textField_TerminationDate.getText() + "')";
+           
+
+           
+
+           insert.executeUpdate(queryInsert);
+           
+           connection.close();
+
+           
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } 
+        
+        refresh();
+    }//GEN-LAST:event_newButtonPressed
+
+       
+    public void refresh(){
+
+        try {
+
+            //Connect to the database
+
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/teamaproject", "root","");
+
+            //initialize the query
+
+            String query = "select * from employee order by emp_id";
+
+            //Create a new statement
+
+            Statement sta = connection.createStatement();
+
+            //Execute the Query and assign the results to the rs object
+
+            ResultSet rs = sta.executeQuery(query);
+
+            //instantiate a new DefaultListModel
+
+            DefaultListModel listModel;
+
+            listModel = new DefaultListModel();
+
+            //Loop through the results and add the items to the lsit model
+
+            while (rs.next()) {
+
+                listModel.addElement(
+                        "emp id: " + rs.getString("emp_id") + " - " +
+                        rs.getString("emp_name"));
+
             }
-        });
+
+            //Set the model of the userList to the list Model
+
+            list_Employee.setModel(listModel);
+
+            //Close the connection
+
+            connection.close();
+
+            //Catch any errors
+
+        } catch (Exception exception) {
+
+            exception.printStackTrace();
+
+        }
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<String> list_Employee;
+    private javax.swing.JTextField textField_Email;
+    private javax.swing.JTextField textField_EmployeeID;
+    private javax.swing.JTextField textField_HireDate;
+    private javax.swing.JTextField textField_Name;
+    private javax.swing.JTextField textField_Phone;
+    private javax.swing.JTextField textField_Position;
+    private javax.swing.JTextField textField_Salary;
+    private javax.swing.JTextField textField_TerminationDate;
     // End of variables declaration//GEN-END:variables
 }
