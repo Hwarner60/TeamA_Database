@@ -1,6 +1,8 @@
+gui\ProductGUI$2.class
 gui\ProductGUI.class
 gui\StockGUI$1.class
 gui\ControllerGUI$2.class
+gui\ProductGUI$3.class
 gui\ControllerGUI$1.class
 gui\StockGUI.class
 gui\ControllerGUI.class
@@ -10,6 +12,7 @@ gui\Main$1.class
 gui\ControllerGUI$3.class
 gui\EmployeeGUI$1.class
 gui\StockGUI$3.class
+gui\ProductGUI$4.class
 gui\Main.class
 gui\ProductGUI$1.class
 gui\StockGUI$2.class
