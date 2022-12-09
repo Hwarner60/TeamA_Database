@@ -9,6 +9,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,6 +23,7 @@ public class ProductGUI extends javax.swing.JFrame {
      */
     public ProductGUI() {
         initComponents();
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
         refresh();
     }
 
@@ -222,6 +225,9 @@ public class ProductGUI extends javax.swing.JFrame {
         } catch (Exception exception) { //catch any exceptions that may have occured
 
             exception.printStackTrace(); //print any errors
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "Delete Failed");
+            
 
         }
         refresh();

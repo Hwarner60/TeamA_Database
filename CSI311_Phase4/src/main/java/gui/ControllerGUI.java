@@ -4,6 +4,8 @@
  */
 package gui;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author hwarn
@@ -86,7 +88,9 @@ public class ControllerGUI extends javax.swing.JFrame {
 
     private void stockButtonPressed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockButtonPressed
         // TODO add your handling code here:
-        stockGUI.setVisible(true);
+        stockGUI.setVisible(true);       
+       
+        
     }//GEN-LAST:event_stockButtonPressed
 
     private void employeeButtonPressed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_employeeButtonPressed

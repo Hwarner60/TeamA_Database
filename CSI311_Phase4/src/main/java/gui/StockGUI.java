@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,6 +22,7 @@ public class StockGUI extends javax.swing.JFrame {
      */
     public StockGUI() {
         initComponents();
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
         refresh();
     }
 

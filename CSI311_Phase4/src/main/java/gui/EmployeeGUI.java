@@ -21,6 +21,8 @@ public class EmployeeGUI extends javax.swing.JFrame {
      */
     public EmployeeGUI() {
         initComponents();
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+
         refresh();
     }
 
